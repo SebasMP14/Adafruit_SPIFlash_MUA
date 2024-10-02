@@ -33,7 +33,7 @@ enum {
   SFLASH_CMD_FAST_READ = 0x0B, // Fast Read
   SFLASH_CMD_QUAD_READ = 0x6B, // 1 line address, 4 line data
 
-  SFLASH_CMD_READ_JEDEC_ID = 0x9f,
+  SFLASH_CMD_READ_JEDEC_ID = 0x9f, 
 
   SFLASH_CMD_PAGE_PROGRAM = 0x02,
   SFLASH_CMD_QUAD_PAGE_PROGRAM = 0x32, // 1 line address, 4 line data

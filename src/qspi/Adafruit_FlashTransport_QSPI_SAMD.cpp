@@ -25,6 +25,7 @@
 
 #include "Adafruit_FlashTransport.h"
 #include "wiring_private.h"
+#include "hardware_pins.h" // AGREGADO PARA ACCEDER 
 #include <Arduino.h>
 
 static void _run_instruction(uint8_t command, uint32_t iframe, uint32_t addr,
@@ -41,9 +42,13 @@ static void samd_peripherals_disable_and_clear_cache(void) {
 // Enable cache
 static void samd_peripherals_enable_cache(void) { CMCC->CTRL.bit.CEN = 1; }
 
-Adafruit_FlashTransport_QSPI::Adafruit_FlashTransport_QSPI(void)
-    : Adafruit_FlashTransport_QSPI(PIN_QSPI_SCK, PIN_QSPI_CS, PIN_QSPI_IO0,
-                                   PIN_QSPI_IO1, PIN_QSPI_IO2, PIN_QSPI_IO3) {}
+// Adafruit_FlashTransport_QSPI::Adafruit_FlashTransport_QSPI(void)
+//     : Adafruit_FlashTransport_QSPI(PIN_QSPI_SCK, PIN_QSPI_CS, PIN_QSPI_IO0,
+//                                    PIN_QSPI_IO1, PIN_QSPI_IO2, PIN_QSPI_IO3) {}
+
+Adafruit_FlashTransport_QSPI::Adafruit_FlashTransport_QSPI(void) // AGREGADO
+    : Adafruit_FlashTransport_QSPI(QSPI_SCK, QSPI_CS, QSPI_D0,
+                                   QSPI_D1, QSPI_D2, QSPI_D3) {}
 
 Adafruit_FlashTransport_QSPI::Adafruit_FlashTransport_QSPI(
     int8_t sck, int8_t cs, int8_t io0, int8_t io1, int8_t io2, int8_t io3) {
@@ -66,7 +71,7 @@ void Adafruit_FlashTransport_QSPI::begin(void) {
 
   // set all pins to QSPI periph
   pinPeripheral(_sck, PIO_COM);
-  pinPeripheral(_cs, PIO_COM);
+  pinPeripheral(_cs,  PIO_COM);
   pinPeripheral(_io0, PIO_COM);
   pinPeripheral(_io1, PIO_COM);
   pinPeripheral(_io2, PIO_COM);
@@ -207,7 +212,7 @@ static void _run_instruction(uint8_t command, uint32_t iframe, uint32_t addr,
   QSPI->INSTRFRAME.reg = iframe;
 
   // Dummy read of INSTRFRAME needed to synchronize.
-  // See Instruction Transmission Flow Diagram, figure 37.9, page 995
+  // See Instruction Transmission Flow Diagram, figure 37.9, page 995 "<3"
   // and Example 4, page 998, section 37.6.8.5.
   volatile uint32_t dummy = QSPI->INSTRFRAME.reg;
   (void)dummy;

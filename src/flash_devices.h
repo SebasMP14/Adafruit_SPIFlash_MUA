@@ -499,6 +499,19 @@ typedef struct {
     .single_status_byte = false, .is_fram = false,                             \
   }
 
+// EXTERNAL FLASH SEBAS_MUA_CONTROL_DEV
+#define W25Q128JV_SM                                                           \
+{                                                                              \
+    .total_size = (1UL << 24), /* 16 MiB */                                    \
+    .start_up_time_us = 5000, .manufacturer_id = 0xef,                         \
+    .memory_type = 0x70, .capacity = 0x18, .max_clock_speed_mhz = 133,         \
+    .quad_enable_bit_mask = 0x02, .has_sector_protection = false,              \
+    .supports_fast_read = true, .supports_qspi = true,                         \
+    .supports_qspi_writes = true, .write_status_register_split = false,        \
+    .single_status_byte = false, .is_fram = false,                             \
+}
+
+
 // Settings for the Winbond W25Q256JV 32MiB SPI flash.
 // https://www.winbond.com/resource-files/w25q256jv%20spi%20revg%2008032017.pdf
 #define W25Q256JV                                                              \
