@@ -358,6 +358,7 @@ bool Adafruit_SPIFlashBase::erasePage(uint32_t pageNumber) {
                                         pageNumber * SFLASH_PAGE_SIZE);
 
   _indicator_off();
+  writeDisable();             // AGREGADO para evitar bucles en waiUntilReady()
 
   return ret;
 }
@@ -384,6 +385,7 @@ bool Adafruit_SPIFlashBase::eraseSector(uint32_t sectorNumber) {
                                         sectorNumber * SFLASH_SECTOR_SIZE);
 
   _indicator_off();
+  writeDisable();             // AGREGADO para evitar bucles en waiUntilReady()
 
   return ret;
 }
@@ -512,6 +514,7 @@ uint32_t Adafruit_SPIFlashBase::writeBuffer(uint32_t address,
   }
 
   _indicator_off();
+  writeDisable();             // AGREGADO para evitar bucles en waiUntilReady()
 
   return len;
 }
