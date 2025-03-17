@@ -499,7 +499,9 @@ typedef struct {
     .single_status_byte = false, .is_fram = false,                             \
   }
 
-// EXTERNAL FLASH SEBAS_MUA_CONTROL_DEV
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// EXTERNAL FLASH SEBAS_MUA_CONTROL_DEV PRUEBA
+// https://www.mouser.com/datasheet/2/949/w25q128jv_dtr_revc_03272018_plus-1489858.pdf
 #define W25Q128JV_SM                                                           \
 {                                                                              \
     .total_size = (1UL << 24), /* 16 MiB */                                    \
@@ -511,6 +513,19 @@ typedef struct {
     .single_status_byte = false, .is_fram = false,                             \
 }
 
+// EXTERNAL FLASH SEBAS_MUA_CONTROL_DEV FINAL
+// https://www.alldatasheet.com/datasheet-pdf/download/1567077/MICRON/MT25QL01GBBB.html
+#define MT25QL01GBBB                                                           \
+{                                                                              \
+    .total_size = (1UL << 24), /* 16 MiB */                                    \
+    .start_up_time_us = 5000, .manufacturer_id = 0x20,                         \
+    .memory_type = 0xBA, .capacity = 0x21, .max_clock_speed_mhz = 133,         \
+    .quad_enable_bit_mask = 0x02, .has_sector_protection = false,              \
+    .supports_fast_read = true, .supports_qspi = true,                         \
+    .supports_qspi_writes = true, .write_status_register_split = false,        \
+    .single_status_byte = true, .is_fram = false,                             \
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Settings for the Winbond W25Q256JV 32MiB SPI flash.
 // https://www.winbond.com/resource-files/w25q256jv%20spi%20revg%2008032017.pdf

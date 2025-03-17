@@ -98,6 +98,9 @@ static const SPIFlash_Device_t possible_devices[] = {
     // Flash breakout
     W25Q16JV_IQ, W25Q32JV_IQ, W25Q64JV_IQ, W25Q128JV_SQ, W25Q128JV_SM, // AGREGADO "_SM"
 
+    // Micron flash memory
+    MT25QL01GBBB, // Agregado placa final V1
+
     // Fujitsu FRAM
     MB85RS64V, MB85RS1MT, MB85RS2MTA, MB85RS4MT,
 
@@ -432,6 +435,38 @@ bool Adafruit_SPIFlashBase::eraseChip(void) {
 
   bool const ret = _trans->runCommand(SFLASH_CMD_ERASE_CHIP);
 
+  #if SPIFLASH_DEBUG
+  uint8_t aux = 0x00;
+  Serial.print("Flag Status Register: 0b");
+  _trans->readCommand(SFLASH_CMD_READ_FSR, &aux, 1);
+  Serial.println(aux, BIN);
+  #endif
+
+  _indicator_off();
+  // writeDisable();                       // AGREGADO, probando
+
+  return ret;
+}
+
+bool Adafruit_SPIFlashBase::erase32SSECTOR(uint32_t ssectorNumber) {
+  if (!_flash_dev) {
+    return false;
+  }
+
+  // skip erase for fram
+  if (_flash_dev->is_fram) {
+    return true;
+  }
+
+  _indicator_on();
+
+  // Before we erase the sector we need to wait for any writes to finish
+  waitUntilReady();
+  writeEnable();
+
+  bool const ret = _trans->eraseCommand(SFLASH_CMD_ERASE_32SSECTOR,
+                                        ssectorNumber * SFLASH_32SSECTOR_SIZE);
+
   _indicator_off();
 
   return ret;
@@ -497,8 +532,7 @@ uint32_t Adafruit_SPIFlashBase::writeBuffer(uint32_t address,
       waitUntilReady();
       writeEnable();
 
-      uint32_t const leftOnPage =
-          SFLASH_PAGE_SIZE - (address & (SFLASH_PAGE_SIZE - 1));
+      uint32_t const leftOnPage = SFLASH_PAGE_SIZE - (address & (SFLASH_PAGE_SIZE - 1));
       uint32_t const toWrite = min(remain, leftOnPage);
 
       if (!_trans->writeMemory(address, buffer, toWrite)) {

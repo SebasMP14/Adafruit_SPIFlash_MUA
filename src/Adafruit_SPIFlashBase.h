@@ -29,7 +29,7 @@
 #include "flash_devices.h"
 
 // for debugging
-#define SPIFLASH_DEBUG 0
+#define SPIFLASH_DEBUG 1
 
 // An easy to use interface for working with Flash memory.
 //
@@ -67,6 +67,7 @@ public:
   bool eraseSector(uint32_t sectorNumber);
   bool eraseBlock(uint32_t blockNumber);
   bool eraseChip(void);
+  bool erase32SSECTOR(uint32_t ssectorNumber);
 
   // Helper
   uint8_t read8(uint32_t addr);

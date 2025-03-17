@@ -27,44 +27,62 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "hardware_pins.h"
 
-enum {
-  SFLASH_CMD_READ = 0x03,      // Single Read
-  SFLASH_CMD_FAST_READ = 0x0B, // Fast Read
-  SFLASH_CMD_QUAD_READ = 0x6B, // 1 line address, 4 line data
+enum {                                                                // MT25QL01GBBB
+  SFLASH_CMD_READ = 0x03,      // Single Read                         // si
+  SFLASH_CMD_FAST_READ = 0x0B, // Fast Read                           // si
+  SFLASH_CMD_QUAD_READ = 0x6B, // 1 line address, 4 line data         // si
 
-  SFLASH_CMD_READ_JEDEC_ID = 0x9f, 
+  SFLASH_CMD_READ_JEDEC_ID = 0x9f,                                    // si
 
-  SFLASH_CMD_PAGE_PROGRAM = 0x02,
-  SFLASH_CMD_QUAD_PAGE_PROGRAM = 0x32, // 1 line address, 4 line data
+  SFLASH_CMD_PAGE_PROGRAM = 0x02,                                     // si
+  SFLASH_CMD_QUAD_PAGE_PROGRAM = 0x32, // 1 line address, 4 line data // si
 
-  SFLASH_CMD_READ_STATUS = 0x05,
-  SFLASH_CMD_READ_STATUS2 = 0x35,
+  SFLASH_CMD_READ_STATUS = 0x05,                                      // si
+  SFLASH_CMD_READ_STATUS2 = 0x35,                                     // si
 
-  SFLASH_CMD_WRITE_STATUS = 0x01,
-  SFLASH_CMD_WRITE_STATUS2 = 0x31,
+  SFLASH_CMD_WRITE_STATUS = 0x01,                                     // si
+  SFLASH_CMD_WRITE_STATUS2 = 0x31,                                    // 
 
-  SFLASH_CMD_ENABLE_RESET = 0x66,
-  SFLASH_CMD_RESET = 0x99,
+  SFLASH_CMD_ENABLE_RESET = 0x66,                                     // si
+  SFLASH_CMD_RESET = 0x99,                                            // si
 
-  SFLASH_CMD_WRITE_ENABLE = 0x06,
-  SFLASH_CMD_WRITE_DISABLE = 0x04,
+  SFLASH_CMD_WRITE_ENABLE = 0x06,                                     // si
+  SFLASH_CMD_WRITE_DISABLE = 0x04,                                    // si
 
-  SFLASH_CMD_ERASE_PAGE = 0x81,
-  SFLASH_CMD_ERASE_SECTOR = 0x20,
-  SFLASH_CMD_ERASE_BLOCK = 0xD8,
-  SFLASH_CMD_ERASE_CHIP = 0xC7,
+  SFLASH_CMD_ERASE_PAGE = 0x81,                                       // 0x52, 32KB SUBSECTOR ERASE
+  SFLASH_CMD_ERASE_SECTOR = 0x20,                                     // si, pero 4KB SUBSECTOR ERASE
+  SFLASH_CMD_ERASE_BLOCK = 0xD8,                                      // si, pero SECTOR ERASE
+  SFLASH_CMD_ERASE_CHIP = 0xC7,                                       //
 
-  SFLASH_CMD_4_BYTE_ADDR = 0xB7,
-  SFLASH_CMD_3_BYTE_ADDR = 0xE9,
+  #ifdef PLACA_FINAL 
+  SFLASH_CMD_ERASE_DIE = 0xC7, // MT25QL01GBBB
+  SFLASH_CMD_READ_FSR = 0x70,   // FLAG STATUS REGISTER
+  SFLASH_CMD_ERASE_32SSECTOR = 0x52,
+  #endif
+
+  SFLASH_CMD_4_BYTE_ADDR = 0xB7,                                      // si
+  SFLASH_CMD_3_BYTE_ADDR = 0xE9,                                      // si
 };
 
 /// Constant that is (mostly) true to all external flash devices
+// #ifdef PLACA_FINAL
+// enum {
+//   SFLASH_BLOCK_SIZE = 64 * 1024, // 
+//   SFLASH_32SSECTOR_SIZE = 32 * 1024, // hay 4096 sub sectores
+//   SFLASH_SECTOR_SIZE = 4 * 1024, //
+//   SFLASH_PAGE_SIZE = 256,
+// };
+// #endif
+// #ifdef PLACA_PRUEBAS
 enum {
   SFLASH_BLOCK_SIZE = 64 * 1024UL,
   SFLASH_SECTOR_SIZE = 4 * 1024,
   SFLASH_PAGE_SIZE = 256,
+  SFLASH_32SSECTOR_SIZE = 32 * 1024,
 };
+// #endif
 
 class Adafruit_FlashTransport {
 public:
